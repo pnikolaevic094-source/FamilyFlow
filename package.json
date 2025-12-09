@@ -29,9 +29,10 @@
     "test:coverage": "react-scripts test --coverage --watchAll=false",
     "test:ci": "CI=true react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint src --ext .js,.jsx || true",
-    "lint:fix": "eslint src --ext .js,.jsx --fix || true",
-    "format": "prettier --write \"src/**/*.{js,jsx,css,md}\" || true",
+    "lint": "eslint src --ext .js,.jsx",
+    "lint:fix": "eslint src --ext .js,.jsx --fix",
+    "format": "prettier --write \"src/**/*.{js,jsx,css,md}\"",
+    "prepare": "husky install",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "deploy:firebase": "firebase deploy --only hosting,firestore || echo 'Install Firebase CLI and configure project'",
     "emulators": "firebase emulators:start --only firestore,auth --import=./firebase_emulator_data --export-on-exit",
@@ -48,7 +49,20 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.6.1",
     "eslint": "^8.40.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.2",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.3.0",
     "prettier": "^2.8.8"
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,css,md}": [
+      "prettier --write",
+      "eslint --fix",
+      "git add"
+    ]
   },
   "jest": {
     "collectCoverageFrom": [
