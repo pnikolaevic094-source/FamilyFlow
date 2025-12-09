@@ -13,15 +13,12 @@ serviceWorkerRegistration.unregister();
 // Performance monitoring
 if (process.env.NODE_ENV === 'production') {
   // Report web vitals
-  const reportWebVitals = (metric) => {
-    console.log(metric);
-  };
-  
   import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
-    getCLS(reportWebVitals);
-    getFID(reportWebVitals);
-    getFCP(reportWebVitals);
-    getLCP(reportWebVitals);
-    getTTFB(reportWebVitals);
+    // Web vitals can be sent to analytics service
+    getCLS(console.error);
+    getFID(console.error);
+    getFCP(console.error);
+    getLCP(console.error);
+    getTTFB(console.error);
   });
 }
