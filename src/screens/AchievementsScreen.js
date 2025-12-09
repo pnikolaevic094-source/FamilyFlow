@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { getProfile } from '../services/profileService';
-import { getUserStats, ACHIEVEMENTS, getLevel, getNextLevel } from '../services/gamificationService';
+import {
+  getUserStats,
+  ACHIEVEMENTS,
+  getLevel,
+  getNextLevel,
+} from '../services/gamificationService';
 import { CHALLENGES, getActiveChallenges, createChallenge } from '../services/challengeService';
 import ChallengeCard from '../components/ChallengeCard';
 import Spinner from '../components/Spinner';
@@ -12,7 +17,6 @@ function AchievementsScreen() {
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState(null);
   const [challenges, setChallenges] = useState([]);
-  const [toast, setToast] = useState(null);
 
   useEffect(() => {
     async function fetchStats() {
@@ -20,7 +24,7 @@ function AchievementsScreen() {
         if (currentUser) {
           const userStats = await getUserStats(currentUser.uid);
           setStats(userStats);
-          
+
           const profile = await getProfile(currentUser.uid);
           if (profile?.defaultFamilyId) {
             const activeChallenges = await getActiveChallenges(profile.defaultFamilyId);
@@ -44,11 +48,9 @@ function AchievementsScreen() {
         await createChallenge(profile.defaultFamilyId, challengeId);
         const activeChallenges = await getActiveChallenges(profile.defaultFamilyId);
         setChallenges(activeChallenges);
-        setToast({ message: 'Вызов принят!', type: 'success' });
       }
     } catch (error) {
       console.error('Error accepting challenge:', error);
-      setToast({ message: 'Ошибка принятия вызова', type: 'error' });
     }
   }
 
@@ -57,18 +59,25 @@ function AchievementsScreen() {
 
   const currentLevel = getLevel(stats.points);
   const nextLevel = getNextLevel(stats.points);
-  const progress = nextLevel ? ((stats.points - currentLevel.minPoints) / (nextLevel.minPoints - currentLevel.minPoints)) * 100 : 100;
+  const progress = nextLevel
+    ? ((stats.points - currentLevel.minPoints) / (nextLevel.minPoints - currentLevel.minPoints)) *
+      100
+    : 100;
 
   return (
     <div className="achievements-container">
-      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
       <div className="level-card">
         <div className="level-icon">{currentLevel.icon}</div>
-        <h2>Уровень {currentLevel.level}: {currentLevel.name}</h2>
+        <h2>
+          Уровень {currentLevel.level}: {currentLevel.name}
+        </h2>
         <h3>🏆 {stats.points} очков</h3>
         {nextLevel && (
           <>
-            <p>До уровня {nextLevel.level} ({nextLevel.name}): {nextLevel.minPoints - stats.points} очков</p>
+            <p>
+              До уровня {nextLevel.level} ({nextLevel.name}): {nextLevel.minPoints - stats.points}{' '}
+              очков
+            </p>
             <div className="progress-bar">
               <div className="progress-fill" style={{ width: `${progress}%` }}>
                 {Math.round(progress)}%
@@ -95,11 +104,11 @@ function AchievementsScreen() {
 
       <h2 style={{ marginTop: '2rem', marginBottom: '1rem' }}>🎯 Вызовы</h2>
       <div className="challenges-grid">
-        {CHALLENGES.map(challenge => {
-          const activeChallenge = challenges.find(c => c.id === challenge.id);
+        {CHALLENGES.map((challenge) => {
+          const activeChallenge = challenges.find((c) => c.id === challenge.id);
           return (
-            <ChallengeCard 
-              key={challenge.id} 
+            <ChallengeCard
+              key={challenge.id}
               challenge={activeChallenge || challenge}
               onAccept={!activeChallenge ? handleAcceptChallenge : null}
             />
@@ -109,10 +118,10 @@ function AchievementsScreen() {
 
       <h2 style={{ marginTop: '2rem', marginBottom: '1rem' }}>🏅 Достижения</h2>
       <div className="achievements-grid">
-        {ACHIEVEMENTS.map(ach => {
+        {ACHIEVEMENTS.map((ach) => {
           const isUnlocked = stats.achievements?.includes(ach.id);
           let progressText = '';
-          
+
           if (ach.id.startsWith('task_')) {
             progressText = `${stats.tasksCompleted}/${ach.requirement}`;
           } else if (ach.id.startsWith('streak_')) {
@@ -131,7 +140,9 @@ function AchievementsScreen() {
                 </div>
               )}
               {isUnlocked && (
-                <div style={{ color: '#4caf50', fontWeight: 'bold', marginTop: '0.5rem' }}>✓ Получено</div>
+                <div style={{ color: '#4caf50', fontWeight: 'bold', marginTop: '0.5rem' }}>
+                  ✓ Получено
+                </div>
               )}
             </div>
           );

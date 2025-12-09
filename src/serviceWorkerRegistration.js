@@ -5,9 +5,7 @@ export function register() {
 
       navigator.serviceWorker
         .register(swUrl)
-        .then(registration => {
-          console.log('SW registered: ', registration);
-          
+        .then((registration) => {
           registration.onupdatefound = () => {
             const installingWorker = registration.installing;
             if (installingWorker == null) {
@@ -16,18 +14,15 @@ export function register() {
             installingWorker.onstatechange = () => {
               if (installingWorker.state === 'installed') {
                 if (navigator.serviceWorker.controller) {
-                  console.log('New content available; please refresh.');
                   if (window.confirm('Доступна новая версия! Обновить?')) {
                     window.location.reload();
                   }
-                } else {
-                  console.log('Content cached for offline use.');
                 }
               }
             };
           };
         })
-        .catch(error => {
+        .catch((error) => {
           console.error('Error during SW registration:', error);
         });
     });
@@ -37,10 +32,10 @@ export function register() {
 export function unregister() {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.ready
-      .then(registration => {
+      .then((registration) => {
         registration.unregister();
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error.message);
       });
   }

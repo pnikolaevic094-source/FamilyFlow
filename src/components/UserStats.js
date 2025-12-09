@@ -7,25 +7,24 @@ function UserStats() {
     totalSessions: 0,
     totalTime: 0,
     streak: 0,
-    tasksCompleted: 0
+    tasksCompleted: 0,
   });
 
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem('user-stats') || '{}');
     const lastVisit = localStorage.getItem('last-visit');
     const today = new Date().toDateString();
-    
+
     if (lastVisit !== today) {
-      const newStreak = lastVisit === new Date(Date.now() - 86400000).toDateString() 
-        ? (stored.streak || 0) + 1 
-        : 1;
-      
+      const newStreak =
+        lastVisit === new Date(Date.now() - 86400000).toDateString() ? (stored.streak || 0) + 1 : 1;
+
       const updated = {
         ...stored,
         totalSessions: (stored.totalSessions || 0) + 1,
-        streak: newStreak
+        streak: newStreak,
       };
-      
+
       setStats(updated);
       localStorage.setItem('user-stats', JSON.stringify(updated));
       localStorage.setItem('last-visit', today);
@@ -34,14 +33,11 @@ function UserStats() {
     }
   }, []);
 
-  const formatTime = (minutes) => {
-    const hours = Math.floor(minutes / 60);
-    return hours > 0 ? `${hours}ч` : `${minutes}м`;
-  };
-
   return (
     <div className="user-stats-widget">
-      <h3><FaChartLine /> Ваша статистика</h3>
+      <h3>
+        <FaChartLine /> Ваша статистика
+      </h3>
       <div className="stats-grid">
         <div className="stat-item">
           <FaClock />

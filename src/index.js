@@ -12,16 +12,24 @@ serviceWorkerRegistration.unregister();
 
 // Performance monitoring
 if (process.env.NODE_ENV === 'production') {
-  // Report web vitals
-  const reportWebVitals = (metric) => {
-    console.log(metric);
-  };
-  
+  // Report web vitals - can be sent to analytics service
   import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
-    getCLS(reportWebVitals);
-    getFID(reportWebVitals);
-    getFCP(reportWebVitals);
-    getLCP(reportWebVitals);
-    getTTFB(reportWebVitals);
+    const sendToAnalytics = (metric) => {
+      // In production, send to analytics service
+      // For now, metrics are collected but not logged to avoid console clutter
+      if (window.gtag) {
+        window.gtag('event', metric.name, {
+          value: Math.round(metric.name === 'CLS' ? metric.value * 1000 : metric.value),
+          metric_id: metric.id,
+          metric_value: metric.value,
+          metric_delta: metric.delta,
+        });
+      }
+    };
+    getCLS(sendToAnalytics);
+    getFID(sendToAnalytics);
+    getFCP(sendToAnalytics);
+    getLCP(sendToAnalytics);
+    getTTFB(sendToAnalytics);
   });
 }
